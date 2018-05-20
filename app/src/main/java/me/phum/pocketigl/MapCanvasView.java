@@ -15,4 +15,9 @@ public class MapCanvasView extends TouchImageView {
     public MapCanvasView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
+
+
+    //private void placeMarker ()
+
 }

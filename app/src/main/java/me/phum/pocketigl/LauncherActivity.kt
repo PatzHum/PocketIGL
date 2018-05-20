@@ -33,6 +33,7 @@ class LauncherActivity : AppCompatActivity() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build()
         gsiClient = GoogleSignIn.getClient(this, gso)
         startActivityForResult(gsiClient.signInIntent, REQUEST_SIGN_IN)
