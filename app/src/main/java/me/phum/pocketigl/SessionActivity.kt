@@ -9,6 +9,7 @@ import android.text.InputFilter
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.FirebaseError
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -51,7 +52,7 @@ class SessionActivity : AppCompatActivity(), LobbyFragment.Delegate {
                     override fun onDataChange(snapshot: DataSnapshot?) {
                         val session = snapshot!!.child(currentSession)
                         if(session.exists()) {
-                            addUser(FirebaseAuth.getInstance().currentUser!!.displayName.toString(), currentSession, "player")
+                            addUser(FirebaseAuth.getInstance().currentUser!!, currentSession, "player")
                             Snackbar.make(root, "Joined session", Snackbar.LENGTH_SHORT).show()
                             joinSession(currentSession)
                         } else {
@@ -82,15 +83,20 @@ class SessionActivity : AppCompatActivity(), LobbyFragment.Delegate {
             Snackbar.make(root, "Session code: " + session.sessionCode, Snackbar.LENGTH_LONG).show()
             joinSession(session.sessionCode)
             sessionCodeInput.setText(session.sessionCode)
-            addUser(FirebaseAuth.getInstance().currentUser!!.displayName.toString(), currentSession, "admin")
+            addUser(FirebaseAuth.getInstance().currentUser!!, currentSession, "admin")
         }
     }
 
-    fun addUser(username: String, sessionId: String, role: String) {
-        val ref = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("users")
-        val update = HashMap<String, String>()
-        update.put(username, role)
-        ref.updateChildren(update as Map<String, String>)
+    fun addUser(user: FirebaseUser, sessionId: String, role: String) {
+        val sessionsRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("users")
+        val sessionUpdate = HashMap<String, String>()
+        sessionUpdate.put(user.uid, role)
+        sessionsRef.updateChildren(sessionUpdate as Map<String, String>)
+
+        val usersRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("users")
+        val usersUpdate = HashMap<String, String>()
+        usersUpdate.put(user.uid, user.displayName.toString())
+        usersRef.updateChildren(usersUpdate as Map<String, String>)
     }
 
     fun joinSession(sessionId: String) {
