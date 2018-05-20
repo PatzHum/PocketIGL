@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageButton
+        android:id="@+id/collapsed_button"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center"
+        android:src="@drawable/hotspot_background"/>
+    <FrameLayout
+        android:id="@+id/expanded_view"
+        android:padding="12dp"
+        android:background="@drawable/hotspot_selector_background"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+</merge>

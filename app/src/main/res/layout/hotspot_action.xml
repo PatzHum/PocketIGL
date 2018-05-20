@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/action_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/titillium_web"
+        android:padding="4dp"
+        android:text="TextView"
+        android:textAllCaps="true"
+        android:textColor="@color/primaryTextColor"
+        android:textStyle="bold" />
+</LinearLayout>
