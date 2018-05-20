@@ -49,7 +49,7 @@ class LauncherActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser) {
         Snackbar.make(root, "Signed in successfully", Snackbar.LENGTH_INDEFINITE).show()
-        startActivity(Intent(this, SessionActivity::class.java))
+        //startActivity(Intent(this, SessionActivity::class.java))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

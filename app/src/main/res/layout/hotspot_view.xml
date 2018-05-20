@@ -11,7 +11,7 @@
         android:id="@+id/expanded_view"
         android:padding="12dp"
         android:background="@drawable/hotspot_selector_background"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
         <LinearLayout

@@ -2,6 +2,9 @@ package me.phum.pocketigl.components
 
 import android.animation.Animator
 import android.content.Context
+import android.support.annotation.DrawableRes
+import android.support.annotation.IdRes
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewAnimationUtils
@@ -42,6 +45,21 @@ class HotspotButton @JvmOverloads constructor(
                 HotspotButton.Companion.HotspotAction.PLANT -> "Plant"
             }
         }
+
+        @JvmStatic
+        @DrawableRes
+        fun HotspotAction.getDrawable() : Int {
+            return when (this) {
+
+                HotspotButton.Companion.HotspotAction.SMOKE -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.GRENADE -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.MOLLY -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.FLASH -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.ATTACK -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.DEFEND -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.PLANT -> R.drawable.baseline_cloud_white_18dp
+            }
+        }
     }
 
     var availableActions: List<HotspotAction> = listOf()
@@ -68,6 +86,7 @@ class HotspotButton @JvmOverloads constructor(
                 val actionView = inflate(context, R.layout.hotspot_action, null)
                 actionView.apply {
                     action_name.text = it.asString()
+                    action_image.setImageDrawable(ContextCompat.getDrawable(context, it.getDrawable()))
                 }
                 actions.addView(actionView)
             }
