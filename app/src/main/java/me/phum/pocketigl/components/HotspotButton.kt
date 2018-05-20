@@ -52,12 +52,12 @@ class HotspotButton @JvmOverloads constructor(
             return when (this) {
 
                 HotspotButton.Companion.HotspotAction.SMOKE -> R.drawable.baseline_cloud_white_18dp
-                HotspotButton.Companion.HotspotAction.GRENADE -> R.drawable.baseline_cloud_white_18dp
-                HotspotButton.Companion.HotspotAction.MOLLY -> R.drawable.baseline_cloud_white_18dp
-                HotspotButton.Companion.HotspotAction.FLASH -> R.drawable.baseline_cloud_white_18dp
-                HotspotButton.Companion.HotspotAction.ATTACK -> R.drawable.baseline_cloud_white_18dp
-                HotspotButton.Companion.HotspotAction.DEFEND -> R.drawable.baseline_cloud_white_18dp
-                HotspotButton.Companion.HotspotAction.PLANT -> R.drawable.baseline_cloud_white_18dp
+                HotspotButton.Companion.HotspotAction.GRENADE -> R.drawable.nade
+                HotspotButton.Companion.HotspotAction.MOLLY -> R.drawable.molly
+                HotspotButton.Companion.HotspotAction.FLASH -> R.drawable.flash
+                HotspotButton.Companion.HotspotAction.ATTACK -> R.drawable.push
+                HotspotButton.Companion.HotspotAction.DEFEND -> R.drawable.hold
+                HotspotButton.Companion.HotspotAction.PLANT -> R.drawable.plant
             }
         }
     }
