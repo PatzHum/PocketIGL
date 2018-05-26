@@ -63,6 +63,18 @@ class HotspotButton @JvmOverloads constructor(
     }
 
     var availableActions: List<HotspotAction> = listOf()
+        set(value) {
+            field = value
+            actions.removeAllViews()
+            availableActions.forEach {
+                val actionView = inflate(context, R.layout.hotspot_action, null)
+                actionView.apply {
+                    action_name.text = it.asString()
+                    action_image.setImageDrawable(ContextCompat.getDrawable(context, it.getDrawable()))
+                }
+                actions.addView(actionView)
+            }
+        }
 
     init {
         View.inflate(context, R.layout.hotspot_view, this)
@@ -75,21 +87,13 @@ class HotspotButton @JvmOverloads constructor(
         }
     }
     fun expand() {
-        actions.removeAllViews()
         if (expanded_view.visibility == View.GONE) {
             expanded_view.visibility = View.VISIBLE
             val cx = expanded_view.width / 2.0
             val cy = cx
             val finalRadius = Math.hypot(cx, cy).toFloat()
             val animator = ViewAnimationUtils.createCircularReveal(expanded_view, cx.toInt(), cy.toInt(), 0f, finalRadius)
-            availableActions.forEach {
-                val actionView = inflate(context, R.layout.hotspot_action, null)
-                actionView.apply {
-                    action_name.text = it.asString()
-                    action_image.setImageDrawable(ContextCompat.getDrawable(context, it.getDrawable()))
-                }
-                actions.addView(actionView)
-            }
+            animator.duration = 100L
             animator.start()
             collapsed_button.visibility = View.GONE
         }
@@ -100,6 +104,7 @@ class HotspotButton @JvmOverloads constructor(
             val cy = expanded_view.height / 2.0
             val startRadius = Math.hypot(cx, cy).toFloat()
             val animator = ViewAnimationUtils.createCircularReveal(expanded_view, cx.toInt(), cy.toInt(), startRadius, 0f)
+            animator.duration = 100L
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(p0: Animator?) {
                 }

@@ -37,7 +37,7 @@ class LauncherActivity : AppCompatActivity() {
                 .build()
         gsiClient = GoogleSignIn.getClient(this, gso)
         startActivityForResult(gsiClient.signInIntent, REQUEST_SIGN_IN)
-        hotspot_button.availableActions = HotspotButton.HOTSPOTS_DEFAULT
+        hotspot_button.availableActions = HotspotButton.HOTSPOTS_PLANT_SITE
     }
 
     override fun onStart() {
