@@ -13,13 +13,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_session.*
 import kotlinx.android.synthetic.main.fragment_lobby.*
 import me.phum.pocketigl.*
+import me.phum.pocketigl.R
 import java.util.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
@@ -87,6 +85,22 @@ class LobbyFragment : Fragment() {
                     userList.add(it.value.toString())
                 }
                 adapter?.notifyDataSetChanged()
+            }
+        })
+
+        //For updating the userList when the data is changed
+        ref.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot?) {
+                val users = snapshot!!.child(sessionCode).child("users").children
+                userList.clear()
+                users.forEach{
+                    userList.add(it.value.toString())
+                }
+                adapter?.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
         initRecyclerView()

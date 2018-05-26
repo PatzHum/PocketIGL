@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.view.inputmethod.InputMethodManager
-import com.google.firebase.FirebaseError
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -15,6 +14,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_session.*
+import me.phum.pocketigl.Model.Session
+import me.phum.pocketigl.Model.User
 import me.phum.pocketigl.lobby.LobbyFragment
 
 class SessionActivity : AppCompatActivity(), LobbyFragment.Delegate {
@@ -96,9 +97,7 @@ class SessionActivity : AppCompatActivity(), LobbyFragment.Delegate {
         sessionsRef.updateChildren(sessionUpdate as Map<String, String>)
 
         val usersRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("users")
-        val usersUpdate = HashMap<String, String>()
-        usersUpdate.put(user.uid, user.displayName.toString())
-        usersRef.updateChildren(usersUpdate as Map<String, String>)
+        usersRef.child(user.uid).setValue(User(user.uid, user.displayName.toString()))
     }
 
     fun joinSession(sessionId: String) {
