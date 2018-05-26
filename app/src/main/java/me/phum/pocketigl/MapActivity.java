@@ -58,7 +58,7 @@ public class MapActivity extends AppCompatActivity {
 
         canvas.translate(displayMetrics.widthPixels*0.008f, displayMetrics.heightPixels*0.008f);
 
-        final TouchImageView mainMap = (TouchImageView) findViewById(R.id.mainMapImg);
+        final ImageView mainMap = (ImageView) findViewById(R.id.mainMapImg);
         mainMap.setImageResource(R.drawable.de_mirage);
 
         View.OnTouchListener onLongTouch = new View.OnTouchListener() {

@@ -9,7 +9,7 @@
     tools:context=".MapActivity">
 
 
-    <me.phum.pocketigl.TouchImageView
+    <ImageView
         android:id="@+id/mainMapImg"
         android:layout_width="0dp"
         android:layout_height="0dp"
