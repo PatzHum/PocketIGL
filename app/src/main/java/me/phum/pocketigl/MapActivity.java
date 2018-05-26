@@ -118,7 +118,7 @@ public class MapActivity extends AppCompatActivity {
                 }
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    DatabaseReference canvasRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").push();
+                    DatabaseReference canvasRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").child(userId).push();
                     canvasRef.setValue(drawBuffer);
                     drawBuffer.clear();
                 }
@@ -131,13 +131,17 @@ public class MapActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot u: dataSnapshot.getChildren()) {
-                    for(DataSnapshot p: u.getChildren()) {
-                        float first = Float.valueOf(String.valueOf(p.child("first").getValue()));
-                        float second = Float.valueOf(String.valueOf(p.child("second").getValue()));
-                        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                        paint.setColor(Color.RED);
-                        canvas.drawCircle(first*displayMetrics.widthPixels, second*displayMetrics.heightPixels, 4, paint);
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                findViewById(R.id.imageView).invalidate();
+                for(DataSnapshot u: dataSnapshot.getChildren()) { //user
+                    for(DataSnapshot l: u.getChildren()) {        //line
+                        for(DataSnapshot p: l.getChildren()) {    //point
+                            float first = Float.valueOf(String.valueOf(p.child("first").getValue()));
+                            float second = Float.valueOf(String.valueOf(p.child("second").getValue()));
+                            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                            paint.setColor(Color.RED);
+                            canvas.drawCircle(first * displayMetrics.widthPixels, second * displayMetrics.heightPixels, 4, paint);
+                        }
                     }
                 }
                 findViewById(R.id.imageView).invalidate();
@@ -165,6 +169,8 @@ public class MapActivity extends AppCompatActivity {
                         String permission = dataSnapshot.getValue(String.class);
                         if(permission.equals("admin")) {
                             FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").removeValue();
+                        } else {
+                            FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").child(userId).removeValue();
                         }
                     }
 
