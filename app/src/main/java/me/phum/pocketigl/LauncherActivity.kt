@@ -17,6 +17,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_launcher.*
+import me.phum.pocketigl.components.HotspotButton
 
 
 class LauncherActivity : AppCompatActivity() {
@@ -36,6 +37,7 @@ class LauncherActivity : AppCompatActivity() {
                 .build()
         gsiClient = GoogleSignIn.getClient(this, gso)
         startActivityForResult(gsiClient.signInIntent, REQUEST_SIGN_IN)
+        hotspot_button.availableActions = HotspotButton.HOTSPOTS_PLANT_SITE
     }
 
     override fun onStart() {
@@ -69,7 +71,6 @@ class LauncherActivity : AppCompatActivity() {
         } catch (e: ApiException) {
             Snackbar.make(findViewById(R.id.root), "signInResult:failed code=" + e.statusCode, Snackbar.LENGTH_INDEFINITE).show()
         }
-
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
