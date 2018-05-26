@@ -1,6 +1,7 @@
 package me.phum.pocketigl;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -24,7 +26,7 @@ public class MapActivity extends AppCompatActivity {
     private Context context;
     private ArrayList<Pair<Float, Float>> drawBuffer = new ArrayList<>();
 
-    Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+    Bitmap bitmap = Bitmap.createBitmap(5000, 5000, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
 
     @Override
@@ -33,7 +35,14 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map);
         context = this;
         constraintLayout = (ConstraintLayout) findViewById(R.id.mainMap);
-        canvas.translate(-200, -300);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        bitmap.setWidth(displayMetrics.widthPixels);
+        bitmap.setHeight(displayMetrics.heightPixels);
+        canvas.setBitmap(bitmap);
+
+        canvas.translate(displayMetrics.widthPixels*0.008f, displayMetrics.heightPixels*0.008f);
 
         final TouchImageView mainMap = (TouchImageView) findViewById(R.id.mainMapImg);
         mainMap.setImageResource(R.drawable.de_mirage);
