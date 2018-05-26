@@ -49,7 +49,9 @@ class LauncherActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser) {
         Snackbar.make(root, "Signed in successfully", Snackbar.LENGTH_INDEFINITE).show()
-        //startActivity(Intent(this, SessionActivity::class.java))
+        var intent = Intent(this, SessionActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -87,5 +89,9 @@ class LauncherActivity : AppCompatActivity() {
                         Snackbar.make(findViewById(R.id.root), "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
                     }
                 })
+    }
+
+    override fun onBackPressed(){
+            moveTaskToBack(true)
     }
 }
