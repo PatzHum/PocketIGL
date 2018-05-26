@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.util.Pair;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +49,7 @@ public class MapActivity extends AppCompatActivity {
     Bitmap bitmap = Bitmap.createBitmap(5000, 5000, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     String sessionId;
+    String userId;
 
     final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
         public void onLongPress(MotionEvent e) {
@@ -62,6 +66,7 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         sessionId = getIntent().getStringExtra("SESSION_ID");
+        userId = getIntent().getStringExtra("USER_ID");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
@@ -144,8 +149,8 @@ public class MapActivity extends AppCompatActivity {
                 }
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    DatabaseReference sessionsRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").push();
-                    sessionsRef.setValue(drawBuffer);
+                    DatabaseReference canvasRef = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").child(userId).push();
+                    canvasRef.setValue(drawBuffer);
                     drawBuffer.clear();
                 }
 
@@ -159,13 +164,17 @@ public class MapActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot u: dataSnapshot.getChildren()) {
-                    for(DataSnapshot p: u.getChildren()) {
-                        float first = Float.valueOf(String.valueOf(p.child("first").getValue()));
-                        float second = Float.valueOf(String.valueOf(p.child("second").getValue()));
-                        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                        paint.setColor(Color.RED);
-                        canvas.drawCircle(first*displayMetrics.widthPixels, second*displayMetrics.heightPixels, 4, paint);
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                findViewById(R.id.imageView).invalidate();
+                for(DataSnapshot u: dataSnapshot.getChildren()) { //user
+                    for(DataSnapshot l: u.getChildren()) {        //line
+                        for(DataSnapshot p: l.getChildren()) {    //point
+                            float first = Float.valueOf(String.valueOf(p.child("first").getValue()));
+                            float second = Float.valueOf(String.valueOf(p.child("second").getValue()));
+                            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                            paint.setColor(Color.RED);
+                            canvas.drawCircle(first * displayMetrics.widthPixels, second * displayMetrics.heightPixels, 4, paint);
+                        }
                     }
                 }
                 findViewById(R.id.imageView).invalidate();
@@ -180,6 +189,33 @@ public class MapActivity extends AppCompatActivity {
         mainMap.setOnLongClickListener(longClickListener);
         //mainMap.setOnTouchListener(onLongTouch);
         mainMap.setOnTouchListener(onTouchListener);
+
+        Button clear = findViewById(R.id.resetButton);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId);
+                DatabaseReference currentUser = ref.child("users").child(userId);
+                currentUser.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String permission = dataSnapshot.getValue(String.class);
+                        if(permission.equals("admin")) {
+                            FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").removeValue();
+                        } else {
+                            FirebaseDatabase.getInstance().getReference("pocketigl").child("sessions").child(sessionId).child("canvas").child(userId).removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                findViewById(R.id.imageView).invalidate();
+            }
+        });
 
     }
 

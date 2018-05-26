@@ -22,6 +22,7 @@ class SessionActivity : AppCompatActivity(), LobbyFragment.Delegate {
     override fun onStartSession(sessionCode: String) {
         val intent = Intent(this, MapActivity::class.java)
         intent.putExtra("SESSION_ID", sessionCode)
+        intent.putExtra("USER_ID", FirebaseAuth.getInstance().currentUser!!.uid)
         startActivity(intent)
     }
 
