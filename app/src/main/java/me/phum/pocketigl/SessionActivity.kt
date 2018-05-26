@@ -19,7 +19,9 @@ import me.phum.pocketigl.lobby.LobbyFragment
 
 class SessionActivity : AppCompatActivity(), LobbyFragment.Delegate {
     override fun onStartSession(sessionCode: String) {
-        startActivity(Intent(this, MapActivity::class.java))
+        val intent = Intent(this, MapActivity::class.java)
+        intent.putExtra("SESSION_ID", sessionCode)
+        startActivity(intent)
     }
 
     private val firebaseAuth = FirebaseAuth.getInstance()
