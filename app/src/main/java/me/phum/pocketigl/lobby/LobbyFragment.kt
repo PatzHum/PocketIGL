@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ private const val ARG_SESSION_CODE = "arg_session_code"
 class LobbyFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var sessionCode: String
+    private var adapter: RecyclerViewAdapter ? = null
     private var delegate : Delegate? = null
     var userList = ArrayList<String>()
 
@@ -43,14 +45,16 @@ class LobbyFragment : Fragment() {
         arguments!!.let {
             sessionCode = it.getString(ARG_SESSION_CODE)
         }
+        adapter = RecyclerViewAdapter(userList, activity)
 
     }
 
     private fun initRecyclerView() {
         val recyclerView = player_list
-        val adapter = RecyclerViewAdapter(userList, activity)
+        //val adapter = RecyclerViewAdapter(userList, activity)
         recyclerView.setAdapter(adapter)
         recyclerView.setLayoutManager(LinearLayoutManager(activity))
+        recyclerView.invalidate()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -82,6 +86,7 @@ class LobbyFragment : Fragment() {
                 users.forEach {
                     userList.add(it.value.toString())
                 }
+                adapter?.notifyDataSetChanged()
             }
         })
         initRecyclerView()
