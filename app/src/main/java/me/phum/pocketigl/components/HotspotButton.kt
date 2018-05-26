@@ -13,6 +13,9 @@ import kotlinx.android.synthetic.main.hotspot_action.view.*
 import kotlinx.android.synthetic.main.hotspot_view.view.*
 import me.phum.pocketigl.R
 import me.phum.pocketigl.components.HotspotButton.Companion.HotspotAction.*
+import android.util.TypedValue
+import kotlin.math.exp
+
 
 /**
  * © PocketIGL 2018
@@ -70,7 +73,12 @@ class HotspotButton @JvmOverloads constructor(
                 val actionView = inflate(context, R.layout.hotspot_action, null)
                 actionView.apply {
                     action_name.text = it.asString()
-                    action_image.setImageDrawable(ContextCompat.getDrawable(context, it.getDrawable()))
+                    val bg = ContextCompat.getDrawable(context, it.getDrawable())
+                    action_image.setImageDrawable(bg)
+                    setOnClickListener {
+                        this@HotspotButton.collapsed_button.background = bg
+                        collapse()
+                    }
                 }
                 actions.addView(actionView)
             }
@@ -82,9 +90,20 @@ class HotspotButton @JvmOverloads constructor(
         collapsed_button.setOnClickListener {
             expand()
         }
+        setOnClickListener {
+            expand()
+        }
         expanded_view.setOnClickListener {
             collapse()
         }
+        minimumWidth = dp(30)
+        minimumHeight = dp (30)
+    }
+
+    fun dp (v : Int) : Int {
+        val r = resources
+        val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), r.displayMetrics)
+        return px.toInt()
     }
     fun expand() {
         if (expanded_view.visibility == View.GONE) {

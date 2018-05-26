@@ -12,8 +12,11 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -29,16 +32,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.HostnameVerifier;
+
+import me.phum.pocketigl.components.HotspotButton;
+
 public class MapActivity extends AppCompatActivity {
 
     private float[] lastLongTouchXY = new float[2];
-    private ConstraintLayout constraintLayout;
+    private FrameLayout constraintLayout;
     private Context context;
     private ArrayList<Pair<Float, Float>> drawBuffer = new ArrayList<>();
 
     Bitmap bitmap = Bitmap.createBitmap(5000, 5000, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     String sessionId;
+
+    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+        public void onLongPress(MotionEvent e) {
+            HotspotButton b = new HotspotButton(context);
+            b.setAvailableActions(HotspotButton.Companion.getHOTSPOTS_DEFAULT());
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.leftMargin = (int) e.getX() - 20;
+            layoutParams.topMargin = (int) e.getY() - 20;
+            constraintLayout.addView(b, layoutParams);
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +66,7 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         context = this;
-        constraintLayout = (ConstraintLayout) findViewById(R.id.mainMap);
+        constraintLayout = (FrameLayout) findViewById(R.id.mainMap);
 
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -77,12 +95,15 @@ public class MapActivity extends AppCompatActivity {
         View.OnLongClickListener longClickListener = new View.OnLongClickListener(){
             @Override
             public boolean onLongClick(View v){
-                float x = lastLongTouchXY[0];
-                float y = lastLongTouchXY[1];
+                //float x = lastLongTouchXY[0];
+                //float y = lastLongTouchXY[1];
+/*
 
                 ImageView playerNode = new ImageView(context);
+*/
 /*                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) playerNode.getLayoutParams();
-                layoutParams.setMargins();*/
+                layoutParams.setMargins();*//*
+
                 playerNode.setMaxHeight(20);
                 playerNode.setMaxWidth(20);
                 playerNode.setImageResource(R.drawable.terrorist_face);
@@ -91,10 +112,20 @@ public class MapActivity extends AppCompatActivity {
 
                 constraintLayout.addView(playerNode);
                 Toast.makeText(getApplicationContext(), "The image view has been added to" + x + " " + y, Toast.LENGTH_SHORT).show();
+*/
+
+                Toast.makeText(context, "Test 1", Toast.LENGTH_SHORT).show();
+                HotspotButton hotspotButton = new HotspotButton(context);
+                //constraintLayout.addView(hotspotButton);
+                Toast.makeText(context, "The hotspot button has been added", Toast.LENGTH_SHORT).show();
 
                 return true;
             }
         };
+
+
+
+
 
         View.OnTouchListener onTouchListener = new View.OnTouchListener(){
 
@@ -117,6 +148,8 @@ public class MapActivity extends AppCompatActivity {
                     sessionsRef.setValue(drawBuffer);
                     drawBuffer.clear();
                 }
+
+                gestureDetector.onTouchEvent(motionEvent);
                 return true;
             }
         };
@@ -144,7 +177,7 @@ public class MapActivity extends AppCompatActivity {
             }
         });
 
-        //mainMap.setOnLongClickListener(longClickListener);
+        mainMap.setOnLongClickListener(longClickListener);
         //mainMap.setOnTouchListener(onLongTouch);
         mainMap.setOnTouchListener(onTouchListener);
 
